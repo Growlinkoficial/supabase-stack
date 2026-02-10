@@ -3,14 +3,68 @@
 Este guia explica como conectar sua instância Supabase Self-Hosted ao n8n.
 
 ## 1. Conexão via Postgres Node
-Use o nó do Postgres no n8n para manipulação direta de dados.
 
-- **Host**: IP da sua VPS (ou `host.docker.internal` se o n8n estiver na mesma rede Docker do Host).
-- **Port**: `5432` (Padrão) ou a porta dinâmica alocada pelo instalador (verifique o output ao final da instalação).
-- **Database**: `postgres`
-- **User**: `postgres`
-- **Password**: A senha gerada durante o `install.sh`.
-- **SSL**: Desativado por padrão no self-hosted.
+### ✅ n8n na mesma VPS que o Supabase (ÚNICA SOLUÇÃO QUE FUNCIONA)
+
+Se ambos estão na mesma máquina, você DEVE conectá-los via **rede Docker**:
+
+#### Passo 1: Conectar n8n à rede do Supabase
+
+```bash
+# Execute na sua VPS (ajuste os nomes se necessário):
+docker network connect supabase_default <nome-do-container-n8n>
+```
+
+**Como descobrir o nome do seu container n8n:**
+```bash
+docker ps | grep n8n
+# Procure o container principal (geralmente "n8n-main", "n8n", ou "n8n_n8n-main")
+```
+
+**Como descobrir o nome da rede do Supabase:**
+```bash
+cd /caminho/para/supabase-stack/supabase-instance
+docker compose ps | grep db
+# A rede geralmente é "supabase_default" ou "supabase-instance_default"
+```
+
+**Exemplo real:**
+```bash
+# Se seu container n8n se chama "n8n-main":
+docker network connect supabase_default n8n-main
+```
+
+#### Passo 2: Configurar credencial no n8n
+
+No n8n, crie uma credencial **PostgreSQL** com:
+
+| Campo | Valor |
+|-------|-------|
+| **Host** | `supabase-db` |
+| **Port** | `5432` |
+| **Database** | `postgres` |
+| **User** | `postgres` |
+| **Password** | Veja abaixo ⬇️ |
+| **SSL** | `Disable` |
+
+**Como obter a senha:**
+```bash
+cd /caminho/para/supabase-stack/supabase-instance
+cat .env | grep "^POSTGRES_PASSWORD="
+```
+
+Copie o valor completo que aparece depois de `POSTGRES_PASSWORD=` e cole no campo **Password** do n8n.
+
+---
+
+### ❌ n8n em outra VPS (NÃO na mesma máquina)
+
+Se o n8n está em outra máquina, **NÃO use Postgres Node**. Use a **API do Supabase** (seção 2 abaixo) que é mais segura e funciona remotamente.
+
+> [!WARNING]
+> **Por que localhost/IP público não funciona?**
+> 
+> O Supabase usa **Supavisor** (connection pooler) que intercepta a porta 5432. Conexões externas ao container requerem autenticação multi-tenant que não existe no self-hosted. A única forma confiável é via rede Docker interna.
 
 ## 2. Conexão via Supabase Node (API) ⭐ Recomendado
 

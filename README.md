@@ -13,7 +13,6 @@ Esta automação provisiona uma instância completa do Supabase Self-Hosted usan
 │       ├── SUPABASE_SETUP.md   # Guia de Uso e Integração
 │       ├── scripts/            # Bibliotecas
 │       └── utils/              # Utilitários de Secrets
-├── directives/                 # Protocolos Operacionais (Layer 1)
 └── ...
 ```
 
