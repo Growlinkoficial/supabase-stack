@@ -1,0 +1,13 @@
+.agent/
+directives/
+AGENTSV1.md
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+.tmp/
+.env
+credentials.json
+token.json
+__pycache__/
+*.pyc
+.DS_Store
