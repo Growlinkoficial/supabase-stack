@@ -102,7 +102,7 @@ Para quem quer **subir tudo rápido, com menos risco de erro**, foi criado um **
 
 
 👉 Para receber o comando de instalação automatizada:  
-🔗 **[link do formulário aqui]**
+🔗 **[link do formulário aqui](https://tally.so/r/GxdQAp)**
 
 Você recebe o comando por e-mail, pronto para rodar na VPS.
 
