@@ -57,6 +57,7 @@ cp "$PROJECT_DIR/.env.example" "$PROJECT_DIR/.env"
 # 5. Configurar .env com Secrets e Portas
 cd "$PROJECT_DIR"
 update_env_secrets ".env"
+chmod 600 ".env"
 
 # Criar docker-compose.override.yml para garantir exposição de portas
 log "INFO" "Copiando docker-compose.override.yml do template..."
@@ -95,6 +96,25 @@ update_env_var "STUDIO_PORT" "$STUDIO_PORT" ".env"
 log "INFO" "Baixando imagens e iniciando containers..."
 docker compose pull
 docker compose up -d
+
+# 7. Aguardar containers ficarem saudáveis
+log "INFO" "Aguardando serviços iniciarem corretamente..."
+MAX_RETRIES=30
+COUNT=0
+while [ $COUNT -lt $MAX_RETRIES ]; do
+    UNHEALTHY=$(docker compose ps --format json | grep -v "healthy" | grep -v "running" || true)
+    if [ -z "$UNHEALTHY" ]; then
+        log "SUCCESS" "Todos os serviços estão saudáveis!"
+        break
+    fi
+    COUNT=$((COUNT + 1))
+    sleep 5
+    echo -n "."
+done
+
+if [ $COUNT -eq $MAX_RETRIES ]; then
+    log "WARN" "Alguns serviços demoraram muito para iniciar. Verifique com 'docker compose ps'."
+fi
 
 log "SUCCESS" "Supabase instalado e rodando!"
 log "INFO" "API Gateway: http://localhost:$API_PORT"

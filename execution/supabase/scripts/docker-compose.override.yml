@@ -1,4 +1,56 @@
 services:
   studio:
+    container_name: supabase-studio
+    restart: unless-stopped
     ports:
       - "${STUDIO_PORT}:3000"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+
+  db:
+    container_name: supabase-db
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+
+  kong:
+    container_name: supabase-kong
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+
+  gotrue:
+    container_name: supabase-auth
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+
+  rest:
+    container_name: supabase-rest
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+
+  realtime:
+    container_name: supabase-realtime
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
