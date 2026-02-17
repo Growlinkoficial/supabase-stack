@@ -137,6 +137,3 @@ Se você busca **simplicidade máxima**, talvez o Supabase Cloud seja mais adequ
 - Faça backups
     
 - Teste antes de usar em produção
-
-## Documentação
-- [Guia de Setup e Integração n8n](execution/supabase/SUPABASE_SETUP.md)
