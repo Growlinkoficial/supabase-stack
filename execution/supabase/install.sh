@@ -76,21 +76,13 @@ fi
 # Atualizar Portas no .env
 log "INFO" "Configurando portas no .env..."
 
-# Função helper para atualizar/inserir .env
-update_env_var() {
-    local key=$1
-    local value=$2
-    local file=$3
-    if grep -q "^$key=" "$file"; then
-        sed -i "s/^$key=.*/$key=$value/" "$file"
-    else
-        echo "$key=$value" >> "$file"
-    fi
-}
-
+# Garantir que as variáveis existam no .env para evitar avisos do Docker Compose
 update_env_var "POSTGRES_PORT" "$POSTGRES_PORT" ".env"
 update_env_var "KONG_HTTP_PORT" "$API_PORT" ".env"
 update_env_var "STUDIO_PORT" "$STUDIO_PORT" ".env"
+
+# Exportar para o ambiente atual para garantir que o Docker Compose veja
+export POSTGRES_PORT KONG_HTTP_PORT STUDIO_PORT
 
 # 6. Subir os containers
 log "INFO" "Baixando imagens e iniciando containers..."

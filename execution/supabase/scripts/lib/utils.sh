@@ -26,3 +26,15 @@ fix_crlf() {
         sed -i 's/\r$//' "$1"
     fi
 }
+
+# Atualizar ou inserir variável no .env
+update_env_var() {
+    local key=$1
+    local value=$2
+    local file=$3
+    if grep -q "^$key=" "$file"; then
+        sed -i "s|^$key=.*|$key=$value|" "$file"
+    else
+        echo "$key=$value" >> "$file"
+    fi
+}

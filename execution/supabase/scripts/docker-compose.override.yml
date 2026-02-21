@@ -28,7 +28,7 @@ services:
           memory: 256M
           cpus: '0.5'
 
-  gotrue:
+  auth:
     container_name: supabase-auth
     restart: unless-stopped
     deploy:
